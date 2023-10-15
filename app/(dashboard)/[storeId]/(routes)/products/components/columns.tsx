@@ -14,6 +14,7 @@ export type ProductColumn = {
   size: string
   createdAt: string
   description: string | null
+  subCategory: string | null
 }
 
 export const columns: ColumnDef<ProductColumn>[] = [
@@ -40,6 +41,10 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "category",
     header: "Category",
+  },
+  {
+    accessorKey: "SubCategory",
+    header: "Sub Category",
   },
   {
     accessorKey: "size",

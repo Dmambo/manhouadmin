@@ -17,6 +17,7 @@ model Store {
   userId    String
   billboards Billboard[] @relation("StoreToBillboard")
   categories Category[]  @relation("StoreToCategory")
+  subCategories SubCategory[]  @relation("StoreToSubCategory")
   sizes     Size[]       @relation("StoreToSize")
   products  Product[]    @relation("StoreToProduct")
   orders    Order[]     @relation("StoreToOrder")
@@ -44,6 +45,7 @@ model Category {
   billboardId String
   billboard Billboard @relation(fields: [billboardId], references: [id])
   products Product[]  @relation("CategoryToProduct")
+  subcategories SubCategory[] 
   name      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -51,6 +53,21 @@ model Category {
 
   @@index([storeId])
   @@index([billboardId])
+}
+
+model SubCategory {
+  id        String    @id @default(uuid())
+  storeId   String
+  store     Store     @relation("StoreToSubCategory", fields: [storeId], references: [id])
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  products Product[]  @relation("SubCategoryToProduct")
+  name      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([storeId])
+  @@index([categoryId])
 }
 
 model Size {
@@ -75,6 +92,8 @@ model Product {
   store     Store     @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId  String
   category    Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
+  subcategoryId  String?
+  subcategory    SubCategory? @relation("SubCategoryToProduct",fields: [subcategoryId], references: [id])
   name      String
   price     Decimal
   isFeatured Boolean @default(false)
@@ -91,6 +110,7 @@ model Product {
   @@index([storeId])
   @@index([categoryId])
   @@index([sizeId])
+  @@index([subcategoryId])
 }
 
 

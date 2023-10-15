@@ -12,10 +12,10 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, billboardId } = body;
+    const { name, categoryId } = body;
 
     console.log('Request Body:', body);
-console.log('Request Headers:', req.headers);
+    console.log('Request Headers:', req.headers);
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -25,8 +25,8 @@ console.log('Request Headers:', req.headers);
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!billboardId) {
-      return new NextResponse("Billboard id is required", { status: 400 });
+    if (!categoryId) {
+      return new NextResponse("Category id is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -44,17 +44,17 @@ console.log('Request Headers:', req.headers);
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const category = await prismadb.category.create({
+    const subcategory = await prismadb.subCategory.create({
       data: {
         name,
-        billboardId,
+        categoryId,
         storeId: params.storeId,
       }
     });
   
-    return NextResponse.json(category);
+    return NextResponse.json(subcategory);
   } catch (error) {
-    console.log('[CATEGORIES_POST]', error);
+    console.log('[SUB_CATEGORIES_POST]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -68,7 +68,7 @@ export async function GET(
       return new NextResponse("Store id is required", { status: 400 });
     }
 
-    const categories = await prismadb.category.findMany({
+    const categories = await prismadb.subCategory.findMany({
       where: {
         storeId: params.storeId
       }
